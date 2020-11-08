@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:id="@+id/layout"
+    >
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:textSize="20sp"
+        android:gravity="center_vertical"
+        android:layout_marginStart="20dp"
+        tool:text="111111111"
+        />
+
+    <TextView
+        android:id="@+id/phone"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:textSize="20sp"
+        android:gravity="center_vertical|end"
+        tool:text="111111111"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="20dp"
+        />
+</LinearLayout>

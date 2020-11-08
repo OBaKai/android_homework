@@ -9,6 +9,10 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.homeword1.*
 
+/**
+ * 实现模拟登录界面
+ * 并且支持安全提示以及错误重试
+ */
 class HomeworkActivity1 : AppCompatActivity(), View.OnClickListener {
 
     companion object{
