@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Homework</string>
+
+    <string name="title">Login Screen</string>
+    <string name="username">Username：</string>
+    <string name="pwd">Password：</string>
+    <string name="retry_hint">Attempts Left：%1$d</string>
+    <string name="login">LOGIN</string>
+    <string name="exit">EXIT</string>
+
+    <string name="dialog_ok_hint">Login success</string>
+    <string name="dialog_fail_hint">Username or password is wrong</string>
+</resources>
