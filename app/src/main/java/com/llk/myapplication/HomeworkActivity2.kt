@@ -2,15 +2,16 @@ package com.llk.myapplication
 
 import android.app.Activity
 import android.app.Dialog
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -32,8 +33,11 @@ class HomeworkActivity2 : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.homeword2)
+
         addPermissByPermissionList(this,
-        listOf<String?>("android.permission.READ_CONTACTS"),
+        listOf<String?>("android.permission.READ_CONTACTS",
+                "android.permission.CALL_PHONE",
+                "android.permission.SEND_SMS"),
         100)
     }
 
@@ -62,22 +66,34 @@ class HomeworkActivity2 : AppCompatActivity(){
         }.start()
     }
 
-    private fun showDialog(user: ContactUser){
+    private fun showDialog(user: ContactUser?){
         val dialog = Dialog(this)
         dialog.setCanceledOnTouchOutside(true)
         dialog.setCancelable(true)
 
         val view = LayoutInflater.from(this).inflate(R.layout.dialog2, null)
 
-        //发短信
         view.findViewById<Button>(R.id.btn_msg)?.setOnClickListener {
             dialog.dismiss()
-            showSendMsgDialog(user)
+
+            if (user != null){
+                showSendMsgDialog(user)
+            }else{
+                Toast.makeText(this, "发短信失败，联系人信息获取异常", Toast.LENGTH_SHORT).show()
+            }
         }
 
-        //打电话
         view.findViewById<Button>(R.id.btn_phone)?.setOnClickListener {
             dialog.dismiss()
+
+            if (user != null && !TextUtils.isEmpty(user.phone)){
+                val intent = Intent(Intent.ACTION_CALL)
+                val data: Uri = Uri.parse("tel:${user.phone}")
+                intent.data = data
+                startActivity(intent)
+            }else{
+                Toast.makeText(this, "打电话失败，联系人信息获取异常", Toast.LENGTH_SHORT).show()
+            }
         }
 
         dialog.setContentView(view)
@@ -86,7 +102,28 @@ class HomeworkActivity2 : AppCompatActivity(){
     }
 
     private fun showSendMsgDialog(user: ContactUser){
+        val dialog = Dialog(this)
+        dialog.setCanceledOnTouchOutside(true)
+        dialog.setCancelable(true)
 
+        val view = LayoutInflater.from(this).inflate(R.layout.dialog_msg, null)
+
+        view.findViewById<TextView>(R.id.msg_name)?.text = user.name
+        view.findViewById<TextView>(R.id.msg_phone)?.text = user.phone
+        val et = view.findViewById<EditText>(R.id.et)
+        view.findViewById<Button>(R.id.send).setOnClickListener{
+            val msg = et?.text?.toString()
+            if (!TextUtils.isEmpty(msg)){
+                val intent = Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:${user.phone}"))
+                intent.putExtra("sms_body", msg)
+                startActivity(intent)
+            }else{
+                Toast.makeText(this, "发送内容为空", Toast.LENGTH_SHORT).show()
+            }
+        }
+        dialog.setContentView(view)
+
+        dialog.show()
     }
 
     /**
@@ -152,7 +189,7 @@ class HomeworkActivity2 : AppCompatActivity(){
 }
 
 class ContactAdapter : RecyclerView.Adapter<ContactHolder>() {
-    private lateinit var datas: List<ContactUser>
+    private var datas: List<ContactUser>? = null
     private var lis: onItemClickListener? = null
 
     fun setDatas(list: List<ContactUser>){
@@ -171,17 +208,21 @@ class ContactAdapter : RecyclerView.Adapter<ContactHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return datas.size
+        return if (datas != null) datas!!.size else 0
     }
 
     override fun onBindViewHolder(holder: ContactHolder, position: Int) {
-        val user = datas[position]
+        val user = datas?.get(position)
         holder.layout?.setOnClickListener{
-            lis?.onItemClick(user)
+            lis?.onItemClick(user!!)
         }
 
-        holder.name?.text = "${user.name}（${user.note}）"
-        holder.phone?.text = user.phone
+        var name = user?.name
+        if (TextUtils.isEmpty(name)) name = "未知联系人"
+        if (!TextUtils.isEmpty(user?.note)) name += "(${user?.note})"
+
+        holder.name?.text = name
+        holder.phone?.text = user?.phone
     }
 
     interface onItemClickListener{
