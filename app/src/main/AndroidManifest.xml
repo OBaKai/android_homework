@@ -13,18 +13,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
-<!--        <activity android:name=".HomeworkActivity1">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-<!--        </activity>-->
-
-        <activity android:name=".HomeworkActivity2">
+        <!--   我设置两个LAUNCHER，这样桌面就会出现两个app图标，分别对应两个作业。     -->
+        <!--   默认打开的是作业1，如果需要看第二个作业，麻烦老师回到桌面再手动点开作业2     -->
+        <activity android:name=".HomeworkActivity1" android:label="作业1">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".HomeworkActivity2" android:label="作业2">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
